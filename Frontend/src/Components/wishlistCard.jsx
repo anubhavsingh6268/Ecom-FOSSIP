@@ -8,9 +8,11 @@ const ProductCard = ({ product, onDelete }) => {
   return (
     <div className="product-card">
       <div className="product-image-container">
-        <img src={product.image} alt={product.name} className="product-image" />
+        {/* FIXED: Changed product.image to product.imageUrl */}
+        <img src={product.imageUrl} alt={product.name} className="product-image" />
 
-        <button className="delete-btn" onClick={() => onDelete(product.id)}>
+        {/* FIXED: Changed product.id to product._id for MongoDB */}
+        <button className="delete-btn" onClick={() => onDelete(product._id)}>
           <img src={trash} alt="delete" />
         </button>
       </div>

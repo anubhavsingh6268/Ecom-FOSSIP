@@ -33,7 +33,7 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
   if (existeduser) {
-    throw new ApiError(409, "User with email or name already exists");
+    throw new ApiError(409, "User with email or phone already exists");
   }
 
   const user = await User.create({
@@ -42,7 +42,7 @@ const registerUser = asyncHandler(async (req, res) => {
     name,
     phoneNumber,
     role: "user",
-    isEmailVerified: false,
+    isEmailVerified: false, // We leave this false for now
   });
 
   const { unHashedToken, hashedToken, tokenExpiry } =
@@ -52,6 +52,10 @@ const registerUser = asyncHandler(async (req, res) => {
 
   await user.save({ validateBeforeSave: false });
 
+  /* ==============================================================
+     TEMPORARILY DISABLED: Prevents Nodemailer from crashing the 
+     registration flow since no SMTP credentials are provided yet.
+     ==============================================================
   await sendEmail({
     email: user?.email,
     subject: "please verify your email",
@@ -62,6 +66,7 @@ const registerUser = asyncHandler(async (req, res) => {
       )}/api/v1/users/verify-email/${unHashedToken}`,
     ),
   });
+  */
 
   const createdUser = await User.findById(user._id).select(
     "-password -refreshToken -emailVerificationToken -emailVerificationExpiry",
@@ -70,13 +75,14 @@ const registerUser = asyncHandler(async (req, res) => {
   if (!createdUser) {
     throw new ApiError(500, "Something went wrong while registering a user");
   }
+  
   return res
     .status(201)
     .json(
       new ApiResponse(
         200,
         { user: createdUser },
-        "user register successfully and email has been on your mail",
+        "User registered successfully! (Email verification bypassed for testing)",
       ),
     );
 });
@@ -110,7 +116,7 @@ const login = asyncHandler(async (req, res) => {
 
   const options = {
     httpOnly: true,
-    secure: true,
+    secure: false,
   };
 
   return res
@@ -258,7 +264,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
     const options = {
       httpOnly: true,
-      secure: true,
+      secure: false,
     };
 
     const { accessToken, refreshToken: newRefresToken } =

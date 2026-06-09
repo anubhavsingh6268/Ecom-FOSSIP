@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { AuthContext } from "../AuthContext"; // Path to your AuthContext
+import { AuthContext } from "../AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import "./Login.css";
 import banner from "../Assets/banner.png";
@@ -25,22 +25,33 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/v1/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include", // <-- CRITICAL: Tells browser to accept the cookie
         body: JSON.stringify({
           email: formData.email,
           password: formData.password,
         }),
       });
       
-      const data = await res.json();
+      const json = await res.json();
 
       if (res.ok) {
-        login(data.user, data.token);
+        // 1. Correctly extract the data from the backend's ApiResponse format
+        const user = json.data.user;
+        const token = json.data.accessToken;
+
+        // 2. Save the token physically to the browser's local storage
+        localStorage.setItem("accessToken", token);
+
+        // 3. Update your AuthContext state
+        login(user, token);
+        
+        // 4. Send them to the home page!
         navigate("/");
       } else {
-        setError(data.message || "Authentication failed");
+        setError(json.message || "Authentication failed");
       }
     } catch (err) {
       console.error("The exact fetch error is:", err); 
