@@ -7,24 +7,41 @@ const userRegisterValidator = () => {
       .notEmpty()
       .withMessage("Email is required")
       .isEmail()
-      .withMessage("Email is in valid"),
-    body("username")
+      .withMessage("Email is invalid"),
+    
+    // 1. Replaced username with phoneNumber
+    body("phoneNumber")
       .trim()
       .notEmpty()
-      .withMessage("Username is required")
-      .isLowercase()
-      .withMessage("Username must be in lower case")
-      .isLength({ min: 3 })
-      .withMessage("Username must be at least of 3 character"),
-    body("password").trim().notEmpty().withMessage("password is required"),
-    body("fullName").trim().optional(),
+      .withMessage("Phone number is required")
+      .isLength({ min: 10 }) // Basic check for a standard phone number
+      .withMessage("Phone number must be at least 10 characters"),
+      
+    // 2. Replaced fullName with name
+    body("name")
+      .trim()
+      .notEmpty()
+      .withMessage("Name is required"),
+      
+    body("password")
+      .trim()
+      .notEmpty()
+      .withMessage("Password is required"),
   ];
 };
 
 const userLoginValidator = () => {
   return [
-    body("email").optional().isEmail().withMessage("Email is invalid"),
-    body("password").notEmpty().withMessage("password is required"),
+    // 3. Made email strictly required since we removed username login
+    body("email")
+      .notEmpty()
+      .withMessage("Email is required")
+      .isEmail()
+      .withMessage("Email is invalid"),
+      
+    body("password")
+      .notEmpty()
+      .withMessage("Password is required"),
   ];
 };
 
@@ -39,14 +56,14 @@ const userForgotPasswordValidator = () => {
   return [
     body("email")
       .notEmpty()
-      .withMessage("Email ie required")
+      .withMessage("Email is required")
       .isEmail()
-      .withMessage("EMail is invalid"),
+      .withMessage("Email is invalid"),
   ];
 };
 
 const userResetForgotPasswordValidator = () => {
-  return [body("newPassword").notEmpty().withMessage("password is required")];
+  return [body("newPassword").notEmpty().withMessage("Password is required")];
 };
 
 export {

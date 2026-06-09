@@ -26,20 +26,21 @@ const generateAccessAndRefreshTokens = async (userId) => {
 };
 
 const registerUser = asyncHandler(async (req, res) => {
-  const { email, username, password, role } = req.body;
+  const { email, name, phoneNumber, password } = req.body;
 
   const existeduser = await User.findOne({
-    $or: [{ username }, { email }],
+    $or: [{ email }, { phoneNumber }],
   });
 
   if (existeduser) {
-    throw new ApiError(409, "User with email or username already exists");
+    throw new ApiError(409, "User with email or name already exists");
   }
 
   const user = await User.create({
     email,
     password,
-    username,
+    name,
+    phoneNumber,
     role: "user",
     isEmailVerified: false,
   });
@@ -55,7 +56,7 @@ const registerUser = asyncHandler(async (req, res) => {
     email: user?.email,
     subject: "please verify your email",
     mailgenContent: emailVerificationMailgenContent(
-      user.username,
+      user.name,
       `${req.protocol}://${req.get(
         "host",
       )}/api/v1/users/verify-email/${unHashedToken}`,
@@ -81,10 +82,10 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 const login = asyncHandler(async (req, res) => {
-  const { email, username, password } = req.body;
+  const { email, password } = req.body;
 
-  if (!username && !email) {
-    throw new ApiError(400, "Username or email is required ");
+  if (!email) {
+    throw new ApiError(400, "Email is required ");
   }
 
   const user = await User.findOne({ email });
@@ -219,7 +220,7 @@ const resendEmailVerification = asyncHandler(async (req, res) => {
     email: user?.email,
     subject: "please verify your email",
     mailgenContent: emailVerificationMailgenContent(
-      user.username,
+      user.name,
       `${req.protocol}://${req.get(
         "host",
       )}/api/v1/users/verify-email/${unHashedToken}`,
@@ -303,7 +304,7 @@ const forgotPasswordRequest = asyncHandler(async (req, res) => {
     email: user?.email,
     subject: "Password Reset Request",
     mailgenContent: forgotPasswordMailgenContent(
-      user.username,
+      user.name,
       `${process.env.FORGOT_PASSWORD_REDIRECT_URL}/${unHashedToken}`,
     ),
   });

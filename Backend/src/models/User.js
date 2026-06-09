@@ -15,13 +15,10 @@ const userSchema = new mongoose.Schema(
         localPath: "",
       },
     },
-    username: {
+    name: {
       type: String,
       required: true,
-      unique: true,
-      lowercase: true,
       trim: true,
-      index: true,
     },
     email: {
       type: String,
@@ -30,8 +27,10 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
-    fullName: {
+    phoneNumber: {
       type: String,
+      required: true,
+      unique: true,
       trim: true,
     },
     password: {
@@ -86,7 +85,6 @@ userSchema.methods.generateAccessToken = function () {
     {
       _id: this._id,
       email: this.email,
-      username: this.username,
       role: this.role,
     },
     process.env.ACCESS_TOKEN_SECRET,
@@ -99,7 +97,6 @@ userSchema.methods.generateRefreshToken = function () {
     {
       _id: this._id,
       email: this.email,
-      username: this.username,
     },
     process.env.REFRESH_TOKEN_SECRET,
     { expiresIn: process.env.REFRESH_TOKEN_EXPIRY },

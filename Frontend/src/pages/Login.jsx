@@ -25,7 +25,7 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/login`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -43,7 +43,8 @@ const Login = () => {
         setError(data.message || "Authentication failed");
       }
     } catch (err) {
-      setError("Error contacting server");
+      console.error("The exact fetch error is:", err); 
+      setError("Error contacting server. Check console (F12).");
     } finally {
       setLoading(false);
     }

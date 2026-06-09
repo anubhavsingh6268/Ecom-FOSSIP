@@ -1,6 +1,8 @@
 import "./Home.css";
 import axios from "axios";
-import { useState, useEffect } from "react"; // BUG 1 FIXED: added useEffect
+import { useState, useEffect, useContext } from "react";
+import { AuthContext } from "../AuthContext";
+import {useNavigate} from "react-router-dom";
 
 import heroModel from "../Assets/character.png";
 import star from "../Assets/star.png";
@@ -97,6 +99,9 @@ const tabs = ["All Products", "Latest Product", "Best Sellers", "Trendy"];
 function Home() {
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
 
+  const { user } = useContext(AuthContext); // Get the user state
+  const navigate = useNavigate();
+
   const [products, setProducts] = useState(LOCAL_PRODUCTS);
   const [activeTab, setActiveTab] = useState("All Products");
   const [wishlist, setWishlist] = useState([]);
@@ -140,6 +145,14 @@ function Home() {
   // ── Wishlist ──────────────────────────────────────────────────────────
 
   const handleWishlist = async (productId) => {
+
+    // 1. SECURITY CHECK: Is the user logged in?
+    if (!user) {
+      alert("Please login to add items to your wishlist!");
+      navigate("/login");
+      return; 
+    }
+
     if (wishlistLoading) return;
 
     const isWishlisted = wishlist.includes(productId);

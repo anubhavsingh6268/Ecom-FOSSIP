@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import "./Explore.css";
 import ProductGrid from "../components/ProductGrid.jsx";
 import FilterSidebar from "../components/sidebarFilter.jsx";
+import { fetchProducts } from "../api/Productapi.js";
 import { useParams } from "react-router-dom";
 import { useProductFilters } from "../hooks/useProductFilters.js";
 import { useExploreControls } from "../hooks/useExploreControls.js";

@@ -34,22 +34,24 @@ const Signup = () => {
     setLoading(true);
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/signup`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/v1/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(formData), // Sends clean name, phoneNumber, email, password
       });
       
-      const data = await res.json();
+      const json = await res.json();
 
       if (res.ok) {
-        login(data.user, data.token);
+        login(json.data.user, json.data.accessToken);
         navigate("/");
       } else {
-        setError(data.message || "Signup failed");
+        setError(json.message || "Signup failed");
       }
     } catch (err) {
-      setError("Error contacting server");
+      console.error("The exact fetch error is:", err); 
+      setError("Error contacting server. Check console (F12).");
     } finally {
       setLoading(false);
     }

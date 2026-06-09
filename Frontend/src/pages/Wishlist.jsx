@@ -1,10 +1,25 @@
 import React, { useState } from "react";
 import "./Wishlist.css";
 import ProductCard from "../components/wishlistCard.jsx";
+import {useContext, useEffect} from "react";
+import { AuthContext } from "../AuthContext";
+import { useNavigate } from "react-router-dom";
 
 import shirt from "../assets/shirt.png";
 
 const Wishlist = () => {
+  const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // If there is no user logged in, send them to login page immediately
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user, navigate]);
+
+  if (!user) return null;
+
   const [products, setProducts] = useState([
     {
       id: 1,
