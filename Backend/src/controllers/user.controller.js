@@ -14,7 +14,7 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 // UPDATE profile (NOT PASSWORD)------------------------
 
 const updateProfile = asyncHandler(async (req, res) => {
-  const { username, fullName } = req.body;
+  const { name, phoneNumber } = req.body; // Changed to match your schema
 
   const user = await User.findById(req.user._id);
 
@@ -22,8 +22,9 @@ const updateProfile = asyncHandler(async (req, res) => {
     throw new ApiError(404, "User not found");
   }
 
-  if (username) user.username = username;
-  if (fullName) user.fullName = fullName;
+  // Update the fields if they are provided
+  if (name) user.name = name;
+  if (phoneNumber) user.phoneNumber = phoneNumber;
 
   await user.save({ validateBeforeSave: false });
 
