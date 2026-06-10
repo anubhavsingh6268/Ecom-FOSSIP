@@ -9,6 +9,8 @@ import {
   resetForgotPassword,
   resendEmailVerification,
   changeCurrentPassword,
+  sendPhoneOTP,
+  verifyPhoneOTP,
 } from "../controllers/auth.controller.js";
 
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -59,5 +61,13 @@ router.post(
 );
 
 router.post("/resend-email-verification", verifyJWT, resendEmailVerification);
+
+router.post("/send-phone-otp", verifyJWT, sendPhoneOTP);
+
+router.post("/verify-phone-otp", verifyJWT, verifyPhoneOTP);
+
+router.post("/send-phone-otp", verifyJWT, sendPhoneOTP);
+
+router.post("/verify-phone-otp", verifyJWT, verifyPhoneOTP);
 
 export default router;

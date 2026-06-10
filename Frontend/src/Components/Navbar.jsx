@@ -45,10 +45,11 @@ const Navbar = () => {
     <>
       <div className="top">
         <div className="top-content">
-          <Link to="/">
-            <img src={loc} alt="location" />
-            Location not set
-          </Link>
+          <p>🚚 FREE SHIPPING ON ORDERS OVER ₹999</p>
+          <span>|</span>
+          <p>EASY 30-DAY RETURNS</p>
+          <span>|</span>
+          <p>NEW ARRIVALS EVERY WEEK</p>
         </div>
       </div>
 
@@ -58,7 +59,7 @@ const Navbar = () => {
         </div>
 
         <div className="logo">
-          <Link to="/">SITE NAME</Link>
+          <Link to="/">Urban Fashion</Link>
         </div>
 
         <div className="nav-items">

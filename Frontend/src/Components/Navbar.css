@@ -1,4 +1,4 @@
-.top {
+/* .top {
   background-color: #383636;
   height: 28px;
   display: flex;
@@ -96,7 +96,6 @@
   font-size: 13px;
 }
 
-/* Hamburger hidden on desktop */
 
 .mobile-menu {
   display: none;
@@ -108,13 +107,10 @@
   cursor: pointer;
 }
 
-/* Mobile Menu Dropdown */
 
 .mobile-nav {
   display: none;
 }
-
-/* Tablet */
 
 @media (max-width: 992px) {
   .nav-items {
@@ -129,8 +125,6 @@
     display: block;
   }
 }
-
-/* Mobile */
 
 @media (max-width: 800px) {
   .navline {
@@ -172,5 +166,214 @@
     text-decoration: none;
     color: black;
     font-size: 18px;
+  }
+} */
+
+* {
+  box-sizing: border-box;
+}
+
+.top {
+  background: #82b31a;
+  height: 35px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.top-content {
+  width: min(95%, 1400px);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 18px;
+
+  color: white;
+
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+}
+
+.top-content span {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.navline {
+  width: min(95%, 1400px);
+
+  height: 85px;
+  padding: 0 1.5vw;
+  margin: auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 40px;
+}
+
+.logo a {
+  text-decoration: none;
+
+  color: black;
+
+  font-size: 42px;
+  font-family: serif;
+
+  font-weight: bold;
+
+  letter-spacing: 2px;
+}
+
+.nav-items {
+  display: flex;
+  align-items: center;
+
+  gap: 45px;
+}
+
+.nav-items a {
+  text-decoration: none;
+
+  color: #222;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  letter-spacing: 1px;
+
+  transition: 0.3s;
+}
+
+.nav-items a:hover {
+  color: #82b31a;
+}
+
+.search {
+  width: 260px;
+}
+
+.user-details {
+  display: flex;
+  align-items: center;
+
+  gap: 22px;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.profile:hover {
+  transform: translateY(-2px);
+}
+
+.profile img {
+  width: 22px;
+  height: 22px;
+}
+
+.profile p {
+  display: none;
+}
+
+.mobile-menu {
+  display: none;
+}
+
+.mobile-menu img {
+  width: 28px;
+  cursor: pointer;
+}
+
+.mobile-nav {
+  display: none;
+}
+
+.mobile-nav a {
+  text-decoration: none;
+  color: black;
+}
+
+@media (max-width: 1200px) {
+  .nav-items {
+    gap: 25px;
+  }
+
+  .logo a {
+    font-size: 34px;
+  }
+
+  .search {
+    width: 200px;
+  }
+}
+
+@media (max-width: 992px) {
+  .nav-items {
+    display: none;
+  }
+
+  .mobile-menu {
+    display: block;
+  }
+
+  .search {
+    flex: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .top {
+    display: none;
+  }
+
+  .navline {
+    height: 70px;
+    gap: 15px;
+  }
+
+  .logo a {
+    font-size: 28px;
+  }
+
+  .search {
+    display: none;
+  }
+
+  .mobile-menu {
+    display: block;
+    order: 1;
+  }
+
+  .logo {
+    order: 2;
+  }
+
+  .user-details {
+    order: 3;
+  }
+
+  .mobile-nav {
+    display: flex;
+    flex-direction: column;
+
+    padding: 20px;
+
+    gap: 20px;
+
+    background: white;
+
+    border-top: 1px solid #eee;
   }
 }

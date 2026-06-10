@@ -43,6 +43,18 @@ const userSchema = new mongoose.Schema(
       enum: ["user", "admin", "seller"],
       default: "user",
     },
+    phoneNumber: {
+      type: String,
+      trim: true,
+    },
+
+    address: {
+      street: String,
+      city: String,
+      state: String,
+      country: String,
+      pincode: String,
+    },
     isEmailVerified: {
       type: Boolean,
       default: false,
@@ -62,11 +74,32 @@ const userSchema = new mongoose.Schema(
     emailVerificationExpiry: {
       type: Date,
     },
+    isPhoneVerified: {
+      type: Boolean,
+      default: false,
+    },
+
+    phoneVerificationOTP: {
+      type: String,
+    },
+
+    phoneVerificationExpiry: {
+      type: Date,
+    },
   },
   {
     timestamps: true,
   },
 );
+
+userSchema.methods.generatePhoneOTP = function () {
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+  this.phoneVerificationOTP = otp;
+  this.phoneVerificationExpiry = Date.now() + 10 * 60 * 1000;
+
+  return otp;
+};
 
 userSchema.pre("save", async function () {
   // Check if password was modified

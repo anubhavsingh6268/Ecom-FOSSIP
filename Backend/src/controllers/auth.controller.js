@@ -1,4 +1,5 @@
 import { User } from "../models/User.js";
+import { sendSMS } from "../utils/sms.js";
 import { emailVerificationMailgenContent, sendEmail } from "../utils/mail.js";
 import { ApiResponse } from "../utils/api-response.js";
 import { ApiError } from "../utils/api-error.js";
@@ -40,7 +41,7 @@ const registerUser = asyncHandler(async (req, res) => {
     email,
     password,
     username,
-    role: "user",
+    role,
     isEmailVerified: false,
   });
 
@@ -366,6 +367,58 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "password changed successfully"));
 });
 
+const sendPhoneOTP = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  if (!user.phoneNumber) {
+    throw new ApiError(400, "Please add phone number first");
+  }
+
+  const otp = user.generatePhoneOTP();
+
+  await user.save({
+    validateBeforeSave: false,
+  });
+
+  console.log(`your otp is ${otp}`);
+
+  return res.status(200).json(new ApiResponse(200, "Opt is in console"));
+});
+
+const verifyPhoneOTP = asyncHandler(async (req, res) => {
+  const { otp } = req.body;
+
+  const user = await User.findById(req.user._id);
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  if (user.phoneVerificationOTP !== otp) {
+    throw new ApiError(400, "Invalid OTP");
+  }
+
+  if (user.phoneVerificationExpiry < Date.now()) {
+    throw new ApiError(400, "OTP expired");
+  }
+
+  user.isPhoneVerified = true;
+  user.phoneVerificationOTP = undefined;
+  user.phoneVerificationExpiry = undefined;
+
+  await user.save({
+    validateBeforeSave: false,
+  });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "Phone verified successfully"));
+});
+
 export {
   registerUser,
   login,
@@ -377,4 +430,6 @@ export {
   changeCurrentPassword,
   resetForgotPassword,
   forgotPasswordRequest,
+  sendPhoneOTP,
+  verifyPhoneOTP,
 };

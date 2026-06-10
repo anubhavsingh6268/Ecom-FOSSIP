@@ -1,4 +1,4 @@
-#Search-bar {
+/* #Search-bar {
   background: #bdd200;
   width: 300px;
   display: flex;
@@ -26,5 +26,43 @@
   padding-right: 10px;
 }
 input::placeholder {
+  color: white;
+} */
+
+#Search-bar {
+  width: 100%;
+  max-width: 260px;
+  height: 42px;
+
+  background: #82b31a;
+
+  border-radius: 30px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 0 15px;
+}
+
+#Search-bar img {
+  width: 18px;
+  height: 18px;
+}
+
+#Search-bar input {
+  flex: 1;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  margin-left: 10px;
+
+  color: white;
+  font-size: 14px;
+}
+
+#Search-bar input::placeholder {
   color: white;
 }

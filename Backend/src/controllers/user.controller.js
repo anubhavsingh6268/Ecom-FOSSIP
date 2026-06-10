@@ -3,7 +3,7 @@ import { ApiResponse } from "../utils/api-response.js";
 import { ApiError } from "../utils/api-error.js";
 import { asyncHandler } from "../utils/async-handler.js";
 
-//GET CURRENT USER (PROFILE)------------------------
+// GET CURRENT USER (PROFILE) ------------------------
 
 const getCurrentUser = asyncHandler(async (req, res) => {
   return res
@@ -11,10 +11,10 @@ const getCurrentUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, req.user, "Current user fetched successfully"));
 });
 
-// UPDATE profile (NOT PASSWORD)------------------------
+// UPDATE PROFILE (NOT PASSWORD) ------------------------
 
 const updateProfile = asyncHandler(async (req, res) => {
-  const { username, fullName } = req.body;
+  const { username, fullName, phoneNumber, address } = req.body;
 
   const user = await User.findById(req.user._id);
 
@@ -24,6 +24,14 @@ const updateProfile = asyncHandler(async (req, res) => {
 
   if (username) user.username = username;
   if (fullName) user.fullName = fullName;
+  if (phoneNumber) user.phoneNumber = phoneNumber;
+
+  if (address) {
+    user.address = {
+      ...user.address,
+      ...address,
+    };
+  }
 
   await user.save({ validateBeforeSave: false });
 
@@ -32,7 +40,7 @@ const updateProfile = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, user, "Profile updated successfully"));
 });
 
-// DELETE WON ACCOUNT =-----------------------
+// DELETE OWN ACCOUNT ------------------------
 
 const deleteAccount = asyncHandler(async (req, res) => {
   await User.findByIdAndDelete(req.user._id);
