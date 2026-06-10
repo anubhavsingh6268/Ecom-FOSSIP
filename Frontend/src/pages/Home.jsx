@@ -1,39 +1,23 @@
-// import "./Home.css";
-// import heroModel from "../Assets/character.png";
-
-// function Home() {
-//   return (
-//     <div className="home-lay">
-//       <div className="hero-section">
-//         <div className="hero-image">
-//           <img src={heroModel} alt="" />
-//         </div>
-//         <div className="hero-text">
-//           <p>Discover now latest collection</p>
-//           <h1>Summer collection 2026</h1>
-//           <button>Shop now</button>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default Home;
-
 import "./Home.css";
 import { useState, useEffect } from "react";
 
 import heroModel1 from "../Assets/character1.png";
 import heroModel2 from "../Assets/character2.png";
 import heroModel3 from "../Assets/character3.png";
+import heroModel4 from "../Assets/mobile-character.png";
 import MEN from "../Assets/MEN-fashion.jpg";
 import WOMEN from "../Assets/WOMEN-fashion.jpg";
 import KIDS from "../Assets/KIDS-fashion.jpg";
 import shirt from "../Assets/shirt.png";
 import heart from "../Assets/heart.png";
 import bottomBanner from "../Assets/bottom-banner.png";
+import Review from "../Components/Review";
+import bottomBannerMobile from "../Assets/bottom-banner-mobile.png";
+
+import useScreenSize from "../hooks/useScreenSize";
 
 function Home() {
+  const isMobile = useScreenSize();
   const slides = [
     {
       image: heroModel1,
@@ -64,17 +48,31 @@ function Home() {
 
   return (
     <div className="home-lay">
-      <div className="hero-section">
-        <div className="hero-image">
-          <img src={slides[currentSlide].image} alt="" />
-        </div>
+      {isMobile ? (
+        <div className="hero-section-mobile">
+          <div className="hero-text-mobile">
+            <p>Discover now latest collection</p>
+            <h1>Summer collection 2026</h1>
+            <button>Shop now</button>
+          </div>
 
-        <div className="hero-text">
-          <p>{slides[currentSlide].subtitle}</p>
-          <h1>{slides[currentSlide].title}</h1>
-          <button>Shop now</button>
+          <div className="hero-image-mobile">
+            <img src={heroModel4} alt="mobile-character" />
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="hero-section">
+          <div className="hero-image">
+            <img src={slides[currentSlide].image} alt="" />
+          </div>
+
+          <div className="hero-text">
+            <p>{slides[currentSlide].subtitle}</p>
+            <h1>{slides[currentSlide].title}</h1>
+            <button>Shop now</button>
+          </div>
+        </div>
+      )}
       <div className="sub-items">
         <p>CURATED COLLECTION</p>
         <h2>FOR EVERY GENERATION</h2>
@@ -97,7 +95,12 @@ function Home() {
         </div>
       </div>
       <div className="bottom-banner">
-        <img src={bottomBanner} alt="" />
+        {isMobile ? (
+          <img src={bottomBannerMobile} alt="" />
+        ) : (
+          <img src={bottomBanner} alt="" />
+        )}
+
         <div className="banner-text">
           <p>SIGNATURE STYLE</p>
           <h2>
@@ -105,10 +108,9 @@ function Home() {
           </h2>
           <button>OUR STORY</button>
         </div>
-        <div className="reviw">
-          <span style={{ color: "#FFD700" }}>★★★★★</span>
-          <p></p>
-        </div>
+      </div>
+      <div className="review">
+        <Review />
       </div>
     </div>
   );
