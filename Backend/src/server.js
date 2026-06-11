@@ -1,8 +1,15 @@
-import connectDB from "./db/index.js";
 import dotenv from "dotenv";
+
+dotenv.config({
+  path: "./.env",
+});
+
+import connectDB from "./db/index.js";
+
 import userRouter from "./routes/user.routes.js";
 import sellerRouter from "./routes/seller.routes.js";
 import authRouter from "./routes/auth.routes.js";
+import { razorpay } from "./utils/razorpay.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import productRouter from "./routes/product.routes.js";
@@ -14,9 +21,6 @@ import paymentRouter from "./routes/payment.routes.js";
 
 import express from "express";
 const app = express();
-dotenv.config({
-  path: "./.env",
-});
 
 //middelware
 app.use(cors());

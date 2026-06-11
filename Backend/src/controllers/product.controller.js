@@ -11,6 +11,7 @@ const createProduct = asyncHandler(async (req, res) => {
     images,
     category,
     subCategory,
+    gender,
     brand,
     price,
     discountedPrice,
@@ -59,6 +60,7 @@ const createProduct = asyncHandler(async (req, res) => {
     images,
     category,
     subCategory,
+    gender,
     brand,
     price,
     discountedPrice,
@@ -139,4 +141,39 @@ const updateProduct = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, product, "product updated successfully"));
 });
 
-export { createProduct, deleteProduct, updateProduct };
+const getProducts = asyncHandler(async (req, res) => {
+  const { gender } = req.query;
+
+  let query = {
+    isPublished: true,
+    isDeleted: false,
+  };
+
+  if (gender) {
+    query.gender = gender;
+  }
+
+  const products = await Product.find(query);
+  console.log(query);
+  console.log("pfood");
+  // console.log(products);
+  const filters = {
+    categories: await Product.distinct("category", query),
+    brands: await Product.distinct("brand", query),
+    colors: await Product.distinct("color", query),
+    fabrics: await Product.distinct("fabric", query),
+  };
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        products,
+        filters,
+      },
+      "Products fetched successfully",
+    ),
+  );
+});
+
+export { createProduct, deleteProduct, updateProduct, getProducts };

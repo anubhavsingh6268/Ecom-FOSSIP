@@ -7,10 +7,12 @@ import {
   createProduct,
   deleteProduct,
   updateProduct,
+  getProducts,
 } from "../controllers/product.controller.js";
 
 const router = Router();
 
+router.get("/", getProducts);
 router.post("/", verifyJWT, authorizeRoles("seller"), createProduct);
 
 router.patch(

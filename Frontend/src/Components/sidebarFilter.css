@@ -1,5 +1,5 @@
 .filter-sidebar {
-  width: 308px;
+  width: clamp(250px, 18vw, 400px);
   flex-shrink: 0;
   border-right: 1px solid #e0e0e0;
   background: #ffffff;
@@ -9,35 +9,31 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 66px;
+  height: 8vh;
   padding: 0 26px;
-  border-bottom: 1px solid #e0e0e0;
 }
 
 .filter-header h2 {
   margin: 0;
-  font-size: 18px;
-  font-weight: 800;
+  font-size: clamp(20px, 1vw, 60px);
+  font-weight: 600;
 }
 
 .filter-header button {
-  border: 0;
   background: transparent;
   color: #e53935;
-  font-size: 13px;
-  font-weight: 800;
+  font-size: 0.8vw;
+  font-weight: 700;
   cursor: pointer;
 }
 
 .filter-block {
-  padding: 24px 26px;
-  border-bottom: 1px solid #e0e0e0;
+  padding: 1vw 1.5vw;
 }
 
 .filter-block h3 {
-  margin: 0 0 18px;
-  font-size: 15px;
-  font-weight: 800;
+  font-size: 0.8;
+  font-weight: 600;
 }
 
 .filter-check {
