@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { createProduct, updateProduct, getProductById } from '../../services/productService';
+import { getSellerProfile } from '../../services/sellerService';
 import { useCategories } from '../../hooks/useCategories';
 import { useBrands } from '../../hooks/useBrands';
 import { Card } from '../../components/ui/Card';
@@ -17,6 +18,9 @@ export const AddProduct = ({ isEdit = false }) => {
   const [loading, setLoading] = useState(false);
   const [fetchingProduct, setFetchingProduct] = useState(false);
   const [imageUrls, setImageUrls] = useState([""]); // Array of image URLs
+  const [sellerProfile, setSellerProfile] = useState(null);
+  const [sellerProfileLoading, setSellerProfileLoading] = useState(true);
+  const [sellerProfileError, setSellerProfileError] = useState("");
 
   // Available Sizes options
   const sizeOptions = ["XS", "S", "M", "L", "XL", "XXL", "30", "32", "34", "36", "7", "8", "9", "10", "11", "One Size"];
@@ -39,6 +43,25 @@ export const AddProduct = ({ isEdit = false }) => {
 
   // Load product if editing
   useEffect(() => {
+    const fetchSellerProfile = async () => {
+      setSellerProfileLoading(true);
+      setSellerProfileError("");
+      try {
+        const profile = await getSellerProfile();
+        setSellerProfile(profile);
+      } catch (err) {
+        if (err.response?.status === 404) {
+          setSellerProfile(null);
+        } else {
+          setSellerProfileError(err.response?.data?.message || "Failed to load seller profile");
+        }
+      } finally {
+        setSellerProfileLoading(false);
+      }
+    };
+
+    fetchSellerProfile();
+
     if (isEdit && id) {
       const fetchProductData = async () => {
         setFetchingProduct(true);
@@ -71,6 +94,11 @@ export const AddProduct = ({ isEdit = false }) => {
   }, [isEdit, id, setValue]);
 
   const onSubmit = async (formData) => {
+    if (!sellerProfile) {
+      alert("Please complete your seller profile before creating products.");
+      return;
+    }
+
     setLoading(true);
     // Parse colors and sizes
     const colorsArray = formData.colors 
@@ -122,7 +150,7 @@ export const AddProduct = ({ isEdit = false }) => {
     }
   };
 
-  if (fetchingProduct) {
+  if (fetchingProduct || sellerProfileLoading) {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
         <div className="w-10 h-10 border-4 border-lime-500 border-t-transparent rounded-full animate-spin"></div>
@@ -151,9 +179,18 @@ export const AddProduct = ({ isEdit = false }) => {
         </div>
       </div>
 
+      {sellerProfileError && (
+        <div className="p-4 bg-rose-50 dark:bg-rose-950/20 text-rose-700 dark:text-rose-400 border border-rose-200 dark:border-rose-900 rounded-xl font-semibold text-sm">
+          {sellerProfileError}
+        </div>
+      )}
+      {!sellerProfile && (
+        <div className="p-4 bg-amber-50 dark:bg-amber-950/20 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-900 rounded-xl font-semibold text-sm">
+          Please complete your seller profile first. <strong>Visit Seller Profile</strong> to continue.
+        </div>
+      )}
       <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left 2 Columns: Form Fields */}
-        <div className="lg:col-span-2 space-y-6">
           <Card title="Product Information" subtitle="Key details like name, brand and category.">
             <div className="space-y-4">
               {/* Product Name */}
@@ -387,6 +424,7 @@ export const AddProduct = ({ isEdit = false }) => {
                 className="w-full py-2.5 font-bold"
                 loading={loading}
                 icon={FiSave}
+                disabled={!sellerProfile || !!sellerProfileError || loading}
               >
                 {isEdit ? "Update Listing" : "Publish Product"}
               </Button>

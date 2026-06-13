@@ -57,7 +57,7 @@ const Login = () => {
 
       login(user, token);
 
-      navigate("/");
+      navigate(user?.role === "seller" ? "/seller" : "/");
     } catch (err) {
       setError(err?.response?.data?.message || "Login failed");
     } finally {

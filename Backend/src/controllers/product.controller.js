@@ -1,4 +1,5 @@
 import { Product } from "../models/Product.js";
+import { SellerProfile } from "../models/SellerProfile.js";
 import { asyncHandler } from "../utils/async-handler.js";
 import { User } from "../models/User.js";
 import { ApiError } from "../utils/api-error.js";
@@ -30,15 +31,22 @@ const createProduct = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Seller not found");
   }
 
-  //check mobile no.
-  if (!seller.phoneNumber) {
+  const sellerProfile = await SellerProfile.findOne({ user: seller._id });
+
+  if (!sellerProfile) {
     throw new ApiError(
       400,
-      "Please complete your profile by adding a phone number before creating products",
+      "Please complete your seller profile before creating products.",
     );
   }
 
-  //Check address
+  if (!seller.phoneNumber) {
+    throw new ApiError(
+      400,
+      "Please complete your profile by adding a phone number before creating products.",
+    );
+  }
+
   if (
     !seller.address ||
     !seller.address.street ||
@@ -49,7 +57,18 @@ const createProduct = asyncHandler(async (req, res) => {
   ) {
     throw new ApiError(
       400,
-      "please complete your address before creating products",
+      "Please complete your address before creating products.",
+    );
+  }
+
+  if (
+    !sellerProfile.storeName ||
+    !sellerProfile.bankAccountNumber ||
+    !sellerProfile.upiId
+  ) {
+    throw new ApiError(
+      400,
+      "Please complete all required seller profile details before creating products.",
     );
   }
 

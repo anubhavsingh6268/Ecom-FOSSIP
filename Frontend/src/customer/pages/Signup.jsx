@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { registerUser } from "../api/auth";
+import { registerUser, loginApi } from "../api/auth";
 import "./Signup.css";
 
 const Signup = () => {
@@ -46,16 +46,16 @@ const Signup = () => {
 
       await registerUser(formData);
 
-      setSuccessMessage(
-        "Registration successful! Please check your email for verification.",
-      );
-
-      setFormData({
-        username: "",
-        email: "",
-        password: "",
-        role: "user",
+      const loginRes = await loginApi({
+        email: formData.email,
+        password: formData.password,
       });
+
+      const loggedInUser = loginRes.data.data.user;
+      const token = loginRes.data.data.accessToken;
+      login(loggedInUser, token);
+
+      navigate(loggedInUser?.role === "seller" ? "/seller" : "/");
     } catch (err) {
       setError(
         err.response?.data?.message || "Signup failed. Please try again.",
